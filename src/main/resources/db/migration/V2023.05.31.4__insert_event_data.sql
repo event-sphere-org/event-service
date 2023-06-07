@@ -1,0 +1,11 @@
+INSERT INTO event_service_schema."event" (creator_id, category_id, title, description, image_url, location, date, time, created_at, updated_at)
+VALUES
+(1, 1, 'Music Concert', 'Join us for an evening of live music performances by renowned artists.', 'https://example.com/concert.jpg', 'City Concert Hall', '2023-06-15', '19:00:00+00:00', current_timestamp, current_timestamp),
+(2, 2, 'Art Exhibition', 'Discover captivating artworks from emerging artists across various mediums.', 'https://example.com/art_exhibition.jpg', 'Modern Art Gallery', '2023-07-10', '11:00:00+00:00', current_timestamp, current_timestamp),
+(3, 3, 'Food Festival', 'Indulge in a wide variety of culinary delights from local food vendors.', 'https://example.com/food_festival.jpg', 'City Park', '2023-08-05', '14:00:00+00:00', current_timestamp, current_timestamp),
+(4, 6, 'Tech Conference', 'Explore the latest trends and innovations in the technology industry.', 'https://example.com/tech_conference.jpg', 'Convention Center', '2023-09-20', '09:00:00+00:00', current_timestamp, current_timestamp),
+(5, 4, 'Sports Tournament', 'Witness thrilling sports competitions featuring professional athletes.', 'https://example.com/sports_tournament.jpg', 'Stadium', '2023-07-30', '16:30:00+00:00', current_timestamp, current_timestamp),
+(3, 2, 'Film Screening', 'Experience the magic of cinema with a curated selection of acclaimed movies.', 'https://example.com/film_screening.jpg', 'Cinema Theater', '2023-07-05', '18:30:00+00:00', current_timestamp, current_timestamp),
+(2, 5, 'Fashion Show', 'Witness the latest fashion trends showcased by top designers and models.', 'https://example.com/fashion_show.jpg', 'Fashion Convention Center', '2023-09-08', '19:00:00+00:00', current_timestamp, current_timestamp),
+(5, 6, 'Workshop: Photography Basics', 'Learn the fundamentals of photography from industry experts.', 'https://example.com/photography_workshop.jpg', 'Art Studio', '2023-07-22', '13:00:00+00:00', current_timestamp, current_timestamp),
+(4, 2, 'Comedy Night', 'Laugh your heart out with a lineup of hilarious stand-up comedians.', 'https://example.com/comedy_night.jpg', 'Comedy Club', '2023-08-02', '20:30:00+00:00', current_timestamp, current_timestamp);
