@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class AlreadyExistsException extends RuntimeException {
 
     /**
-     * Constructs a new instance of {@code UserAlreadyExistsException} with the specified detail message.
+     * Constructs a new instance of {@code AlreadyExistsException} with the specified detail message.
      *
      * @param message the detail message.
      */

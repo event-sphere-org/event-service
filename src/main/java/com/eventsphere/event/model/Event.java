@@ -1,8 +1,14 @@
 package com.eventsphere.event.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -44,7 +50,7 @@ public class Event extends RepresentationModel<Event> {
     private String imageUrl;
 
     @Basic
-    @Column(name = "location",nullable = false)
+    @Column(name = "location", nullable = false)
     @Size(min = 3, message = "Location must be at least 3 characters")
     private String location;
 

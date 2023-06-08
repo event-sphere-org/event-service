@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class EventNotValidException extends RuntimeException {
 
     /**
-     * Constructs a new instance of {@code UserNotValidException} with the specified detail message.
+     * Constructs a new instance of {@code EventNotValidException} with the specified detail message.
      *
      * @param message the detail message.
      */

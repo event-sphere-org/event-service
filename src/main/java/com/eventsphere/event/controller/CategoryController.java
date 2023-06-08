@@ -20,12 +20,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequestMapping("v1/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-    private final CategoryService categoryService;
-
     private static final String GET_CATEGORY_REL = "get-category";
     private static final String CREATE_CATEGORY_REL = "create-category";
     private static final String GET_ALL_CATEGORIES_REL = "get-all-categories";
     private static final String SELF_REL = "self";
+    private final CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<CollectionModel<Category>> getAllCategories() {

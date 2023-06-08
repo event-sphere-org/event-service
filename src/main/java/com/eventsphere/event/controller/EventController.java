@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -21,11 +21,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class EventController {
 
-    private final EventService eventService;
     private static final String GET_EVENT_REL = "get-event";
     private static final String CREATE_EVENT_REL = "create-event";
     private static final String GET_ALL_EVENTS_REL = "get-all-events";
     private static final String SELF_REL = "self";
+    private final EventService eventService;
 
     @GetMapping
     public ResponseEntity<CollectionModel<Event>> getAllEvents() {

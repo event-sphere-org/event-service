@@ -1,0 +1,17 @@
+
+
+${AnsiStyle.BOLD}${AnsiColor.MAGENTA}  _____${AnsiColor.BLUE} ____   ${AnsiStyle.NORMAL}${AnsiColor.BRIGHT_CYAN} _____                 _     ____                  _
+${AnsiStyle.BOLD}${AnsiColor.MAGENTA} | ____${AnsiColor.BLUE}/ ___|  ${AnsiStyle.NORMAL}${AnsiColor.BRIGHT_CYAN}| ____|_   _____ _ __ | |_  / ___|  ___ _ ____   _(_) ___ ___
+${AnsiStyle.BOLD}${AnsiColor.MAGENTA} |  _| ${AnsiColor.BLUE}\___ \  ${AnsiStyle.NORMAL}${AnsiColor.BRIGHT_CYAN}|  _| \ \ / / _ \ '_ \| __| \___ \ / _ \ '__\ \ / / |/ __/ _ \
+${AnsiStyle.BOLD}${AnsiColor.MAGENTA} | |___${AnsiColor.BLUE} ___) | ${AnsiStyle.NORMAL}${AnsiColor.BRIGHT_CYAN}| |___ \ V /  __/ | | | |_   ___) |  __/ |   \ V /| | (_|  __/
+${AnsiStyle.BOLD}${AnsiColor.MAGENTA} |_____${AnsiColor.BLUE}|____/  ${AnsiStyle.NORMAL}${AnsiColor.BRIGHT_CYAN}|_____| \_/ \___|_| |_|\__| |____/ \___|_|    \_/ |_|\___\___|
+${AnsiColor.GREEN} :: Spring Boot ::${AnsiColor.DEFAULT}    ${spring-boot.formatted-version}
+${AnsiColor.DEFAULT}
++-----------------------------------------------------+
+|                   ${AnsiStyle.BOLD}Application Info${AnsiStyle.NORMAL}                  |
++-----------------------------------------------------+
+|               ${AnsiStyle.NORMAL}Application name:${AnsiStyle.NORMAL} ${AnsiStyle.ITALIC}${spring.application.name}${AnsiStyle.NORMAL}       |
+|               ${AnsiStyle.NORMAL}Active profile:${AnsiStyle.NORMAL}   ${AnsiStyle.ITALIC}${spring.profiles.active}${AnsiStyle.NORMAL}                 |
+|               ${AnsiStyle.NORMAL}Server port:${AnsiStyle.NORMAL}      ${AnsiStyle.ITALIC}${server.port}${AnsiStyle.NORMAL}                |
++-----------------------------------------------------+
+

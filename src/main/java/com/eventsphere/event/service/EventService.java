@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EventService {
-   private final EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
 
     public List<Event> getAll() {
@@ -25,6 +25,7 @@ public class EventService {
     public Event get(Long id) {
         return eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
     }
+
     public Event save(Event event) {
         Event savedEvent;
 
@@ -40,6 +41,7 @@ public class EventService {
 
         return savedEvent;
     }
+
     public Event create(Event user) {
         Event createdUser;
 
@@ -51,6 +53,7 @@ public class EventService {
 
         return createdUser;
     }
+
     public Event update(Long eventId, EventDto eventDto) {
         Event eventFromDb = get(eventId);
 
@@ -77,9 +80,10 @@ public class EventService {
 
         return save(eventFromDb);
     }
+
     public boolean checkTitleUpdate(String titleFromDb, String updatedTitle) {
         if (!updatedTitle.equals(titleFromDb) && eventRepository.existsByTitle(updatedTitle)) {
-                throw new AlreadyExistsException("This title is already registered");
+            throw new AlreadyExistsException("This title is already registered");
         }
         return true;
     }

@@ -1,6 +1,5 @@
 package com.eventsphere.event.model.dto;
 
-import com.eventsphere.event.model.Category;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -27,5 +26,5 @@ public class EventDto {
 
     private Time time;
 
-    private Category category;
+    private String category;
 }
