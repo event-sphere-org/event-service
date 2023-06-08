@@ -11,6 +11,8 @@ import org.springframework.hateoas.RepresentationModel;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 @Entity
@@ -87,7 +89,7 @@ public class Event extends RepresentationModel<Event> {
         this.category = category;
     }
 
-    public Event(Long creatorId, String title, String description, String imageUrl, String location, Date date, @NotNull Time time, @NotNull Category category) {
+    public Event(Long creatorId, String title, String description, String imageUrl, String location, Date date, Time time, Category category) {
         this.creatorId = creatorId;
         this.title = title;
         this.description = description;
@@ -96,6 +98,22 @@ public class Event extends RepresentationModel<Event> {
         this.date = date;
         this.time = time;
         this.category = category;
+    }
+
+    public Event(Long id, Long creatorId, String title, String description, String imageUrl, String location, String date, String time, String categoryName) throws ParseException {
+        this.creatorId = creatorId;
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.location = location;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date parsedDate = dateFormat.parse(date);
+        this.date = new Date(parsedDate.getTime());
+        SimpleDateFormat dateForm = new SimpleDateFormat("HH:mm:ss");
+        java.util.Date parsedTime = dateForm.parse(time);
+        this.time = new Time(parsedTime.getTime());
+        this.category = new Category(categoryName);
     }
 
     @Override

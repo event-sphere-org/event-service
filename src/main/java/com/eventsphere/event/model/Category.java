@@ -2,6 +2,7 @@ package com.eventsphere.event.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -24,10 +25,12 @@ public class Category extends RepresentationModel<Category> {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @NotNull
     @Column(name = "id")
     private Long id;
 
     @Basic
+    @NotNull
     @Column(name = "name", nullable = false)
     @Size(min = 3, message = "Name must be at least 3 characters")
     @Size(max = 50, message = "Name must be no more than 50 characters")
@@ -52,6 +55,10 @@ public class Category extends RepresentationModel<Category> {
 
     public Category(Long id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public Category(String name) {
         this.name = name;
     }
 

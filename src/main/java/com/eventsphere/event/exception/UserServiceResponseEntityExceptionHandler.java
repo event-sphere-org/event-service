@@ -35,6 +35,30 @@ public class UserServiceResponseEntityExceptionHandler extends ResponseEntityExc
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler({EventNotFoundException.class,CategoryNotFoundException.class})
+    public final ResponseEntity<ErrorDetails> handleNotFoundException(Exception ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
+                ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public final ResponseEntity<ErrorDetails> handleAlreadyExistsException(Exception ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
+                ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({EventNotValidException.class, CategoryNotValidException.class})
+    public final ResponseEntity<ErrorDetails> handleNotValidException(Exception ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
+                ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
+
     /**
      * Handles MethodArgumentNotValidException and returns an error response with a bad request status.
      *
