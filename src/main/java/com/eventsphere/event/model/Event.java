@@ -5,10 +5,7 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -23,6 +20,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class Event extends RepresentationModel<Event> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +60,7 @@ public class Event extends RepresentationModel<Event> {
 
     @Basic
     @Column(name = "time", nullable = false)
-    @NotNull
+    @NotNull(message = "Provide time for event")
     private Time time;
 
     @Basic

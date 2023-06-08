@@ -4,7 +4,9 @@ import com.eventsphere.event.exception.AlreadyExistsException;
 import com.eventsphere.event.exception.EventNotFoundException;
 import com.eventsphere.event.exception.EventNotValidException;
 import com.eventsphere.event.model.Event;
-import com.eventsphere.event.model.dto.EventDto;
+import com.eventsphere.event.model.dto.EventCreateDto;
+import com.eventsphere.event.model.dto.EventUpdateDto;
+import com.eventsphere.event.model.dto.adapter.EventCreateDtoAdapter;
 import com.eventsphere.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +17,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class EventService {
+
     private final EventRepository eventRepository;
 
+    private final EventCreateDtoAdapter eventCreateDtoAdapter;
 
     public List<Event> getAll() {
         return eventRepository.findAll();
@@ -42,40 +46,36 @@ public class EventService {
         return savedEvent;
     }
 
-    public Event create(Event user) {
-        Event createdUser;
+    public Event create(EventCreateDto eventCreateDto) {
+        Event createdEvent = eventCreateDtoAdapter.fromDto(eventCreateDto);
 
-        if (eventRepository.existsByTitle(user.getTitle())) {
-            throw new AlreadyExistsException("This username is already registered");
-        } else {
-            createdUser = save(user);
-        }
+        // TODO Check if user exists
 
-        return createdUser;
+        return eventRepository.save(createdEvent);
     }
 
-    public Event update(Long eventId, EventDto eventDto) {
+    public Event update(Long eventId, EventUpdateDto eventUpdateDto) {
         Event eventFromDb = get(eventId);
 
-        if (eventDto.getTitle() != null &&
-                checkTitleUpdate(eventFromDb.getTitle(), eventDto.getTitle())) {
-            eventFromDb.setTitle(eventDto.getTitle());
+        if (eventUpdateDto.getTitle() != null &&
+                checkTitleUpdate(eventFromDb.getTitle(), eventUpdateDto.getTitle())) {
+            eventFromDb.setTitle(eventUpdateDto.getTitle());
         }
 
-        if (eventDto.getDescription() != null) {
-            eventFromDb.setDescription(eventDto.getDescription());
+        if (eventUpdateDto.getDescription() != null) {
+            eventFromDb.setDescription(eventUpdateDto.getDescription());
         }
 
-        if (eventDto.getImageUrl() != null) {
-            eventFromDb.setImageUrl(eventDto.getImageUrl());
+        if (eventUpdateDto.getImageUrl() != null) {
+            eventFromDb.setImageUrl(eventUpdateDto.getImageUrl());
         }
 
-        if (eventDto.getLocation() != null) {
-            eventFromDb.setLocation(eventDto.getLocation());
+        if (eventUpdateDto.getLocation() != null) {
+            eventFromDb.setLocation(eventUpdateDto.getLocation());
         }
 
-        if (eventDto.getTime() != null) {
-            eventFromDb.setTime(eventDto.getTime());
+        if (eventUpdateDto.getTime() != null) {
+            eventFromDb.setTime(eventUpdateDto.getTime());
         }
 
         return save(eventFromDb);

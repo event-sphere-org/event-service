@@ -1,7 +1,8 @@
 package com.eventsphere.event.controller;
 
 import com.eventsphere.event.model.Event;
-import com.eventsphere.event.model.dto.EventDto;
+import com.eventsphere.event.model.dto.EventCreateDto;
+import com.eventsphere.event.model.dto.EventUpdateDto;
 import com.eventsphere.event.service.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class EventController {
         CollectionModel<Event> eventCollectionModel = CollectionModel.of(events);
         eventCollectionModel.add(
                 linkTo(methodOn(EventController.class).getAllEvents()).withRel(SELF_REL),
-                linkTo(methodOn(EventController.class).createEvent(new Event())).withRel(CREATE_EVENT_REL)
+                linkTo(methodOn(EventController.class).createEvent(new EventCreateDto())).withRel(CREATE_EVENT_REL)
         );
 
         return ResponseEntity.ok(eventCollectionModel);
@@ -53,14 +54,14 @@ public class EventController {
         event.add(
                 linkTo(methodOn(EventController.class).getEvent(id)).withRel(SELF_REL),
                 linkTo(methodOn(EventController.class).getAllEvents()).withRel(GET_ALL_EVENTS_REL),
-                linkTo(methodOn(EventController.class).createEvent(event)).withRel(CREATE_EVENT_REL)
+                linkTo(methodOn(EventController.class).createEvent(new EventCreateDto())).withRel(CREATE_EVENT_REL)
         );
 
         return ResponseEntity.ok(event);
     }
 
     @PostMapping
-    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) {
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody EventCreateDto event) {
         Event createdUser = eventService.create(event);
 
         createdUser.add(
@@ -78,13 +79,13 @@ public class EventController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @Valid @RequestBody EventDto userDto) {
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @Valid @RequestBody EventUpdateDto userDto) {
         Event updatedUser = eventService.update(id, userDto);
 
         updatedUser.add(
                 linkTo(methodOn(EventController.class).updateEvent(id, userDto)).withRel(SELF_REL),
-                linkTo(methodOn(EventController.class).getAllEvents()).withRel(GET_ALL_EVENTS_REL),
-                linkTo(methodOn(EventController.class).createEvent(updatedUser)).withRel(CREATE_EVENT_REL)
+                linkTo(methodOn(EventController.class).getAllEvents()).withRel(GET_ALL_EVENTS_REL)
+//                linkTo(methodOn(EventController.class).createEvent(updatedUser)).withRel(CREATE_EVENT_REL)
         );
 
         return ResponseEntity.ok(updatedUser);

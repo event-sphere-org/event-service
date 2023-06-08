@@ -4,7 +4,7 @@ import com.eventsphere.event.exception.AlreadyExistsException;
 import com.eventsphere.event.exception.EventNotFoundException;
 import com.eventsphere.event.model.Category;
 import com.eventsphere.event.model.Event;
-import com.eventsphere.event.model.dto.EventDto;
+import com.eventsphere.event.model.dto.EventUpdateDto;
 import com.eventsphere.event.service.EventService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -139,40 +139,40 @@ class EventControllerTest {
     @Test
     void validUpdateEventTest() throws Exception {
 
-        EventDto eventDto = new EventDto();
-        eventDto.setTitle("updateTitle");
-        eventDto.setDescription("updateDescription");
-        eventDto.setImageUrl("Update imageUrl");
-        eventDto.setLocation("updateLocation");
-        eventDto.setDate(new Date(2023 - 11 - 2));
-        eventDto.setTime(new Time(15 - 30));
-        eventDto.setCategory(new Category(3L, "Music"));
+        EventUpdateDto eventUpdateDto = new EventUpdateDto();
+        eventUpdateDto.setTitle("updateTitle");
+        eventUpdateDto.setDescription("updateDescription");
+        eventUpdateDto.setImageUrl("Update imageUrl");
+        eventUpdateDto.setLocation("updateLocation");
+        eventUpdateDto.setDate(new Date(2023 - 11 - 2));
+        eventUpdateDto.setTime(new Time(15 - 30));
+        eventUpdateDto.setCategory(new Category(3L, "Music"));
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/v1/events/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(eventDto)))
+                        .content(gson.toJson(eventUpdateDto)))
                 .andExpect(status().isOk());
     }
 
     @Test
     void invalidUpdateEventTest() throws Exception {
 
-        EventDto eventDto = new EventDto();
-        eventDto.setTitle("t");
-        eventDto.setDescription("d");
-        eventDto.setImageUrl("Update imageUrl");
-        eventDto.setLocation("l");
-        eventDto.setDate(new Date(2002 - 11 - 2));
-        eventDto.setTime(new Time(30));
-        eventDto.setCategory(new Category());
+        EventUpdateDto eventUpdateDto = new EventUpdateDto();
+        eventUpdateDto.setTitle("t");
+        eventUpdateDto.setDescription("d");
+        eventUpdateDto.setImageUrl("Update imageUrl");
+        eventUpdateDto.setLocation("l");
+        eventUpdateDto.setDate(new Date(2002 - 11 - 2));
+        eventUpdateDto.setTime(new Time(30));
+        eventUpdateDto.setCategory(new Category());
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
         mockMvc.perform(MockMvcRequestBuilders
                         .patch("/v1/events/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(gson.toJson(eventDto)))
+                        .content(gson.toJson(eventUpdateDto)))
                 .andExpect(status().isBadRequest());
     }
 
