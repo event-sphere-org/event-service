@@ -4,17 +4,26 @@ import com.eventsphere.event.exception.AlreadyExistsException;
 import com.eventsphere.event.exception.CategoryNotFoundException;
 import com.eventsphere.event.exception.CategoryNotValidException;
 import com.eventsphere.event.model.Category;
+import com.eventsphere.event.model.Event;
 import com.eventsphere.event.model.dto.CategoryDto;
 import com.eventsphere.event.repository.CategoryRepository;
+import com.eventsphere.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
     private final CategoryRepository categoryRepository;
+
+    private final EventRepository eventRepository;
 
     public List<Category> getAll() {
         return categoryRepository.findAll();
@@ -24,34 +33,43 @@ public class CategoryService {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
-    public Category save(Category category) {
-        Category savedCategory;
+    public Category getWithEvents(Long id, int page, int size, boolean upcoming) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        Pageable pageable = PageRequest.of(page, size);
 
+        Page<Event> eventsPage = upcoming ? eventRepository.findUpcomingEventsByCategory(category, pageable) :
+                eventRepository.findByCategory(category, pageable);
+
+        category.setEvents(new HashSet<>(eventsPage.getContent()));
+
+        return category;
+    }
+
+
+    public Category get(String name) {
+        return categoryRepository.findByName(name)
+                .orElseThrow(() -> new CategoryNotFoundException(name));
+    }
+
+    public Category save(Category category) {
         try {
             category.setCreatedAt(null);
             category.setUpdatedAt(null);
 
-            savedCategory = categoryRepository.save(category);
+            return categoryRepository.save(category);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
             throw new CategoryNotValidException("Invalid category data: " + ex.getMessage());
         }
-
-        return savedCategory;
     }
 
     public Category create(Category category) {
-        Category createdCategory;
-
         if (categoryRepository.existsByName(category.getName())) {
             throw new AlreadyExistsException("This category is already registered");
         } else {
-            createdCategory = save(category);
+            return save(category);
         }
-
-        return createdCategory;
     }
-
 
     public Category update(Long categoryId, CategoryDto categoryDto) {
         Category categoryFromDb = get(categoryId);
@@ -60,6 +78,7 @@ public class CategoryService {
                 checkNameUpdate(categoryFromDb.getName(), categoryDto.getName())) {
             categoryFromDb.setName(categoryDto.getName());
         }
+
         return save(categoryFromDb);
     }
 

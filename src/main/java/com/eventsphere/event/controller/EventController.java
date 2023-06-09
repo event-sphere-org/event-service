@@ -62,33 +62,33 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<Event> createEvent(@Valid @RequestBody EventCreateDto event) {
-        Event createdUser = eventService.create(event);
+        Event createdEvent = eventService.create(event);
 
-        createdUser.add(
+        createdEvent.add(
                 linkTo(methodOn(EventController.class).createEvent(event)).withRel(SELF_REL),
                 linkTo(methodOn(EventController.class).getAllEvents()).withRel(GET_ALL_EVENTS_REL),
-                linkTo(methodOn(EventController.class).getEvent(createdUser.getId())).withRel(GET_EVENT_REL)
+                linkTo(methodOn(EventController.class).getEvent(createdEvent.getId())).withRel(GET_EVENT_REL)
         );
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(createdUser.getId())
+                .buildAndExpand(createdEvent.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(createdUser);
+        return ResponseEntity.created(location).body(createdEvent);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @Valid @RequestBody EventUpdateDto userDto) {
-        Event updatedUser = eventService.update(id, userDto);
+    public ResponseEntity<Event> updateEvent(@PathVariable Long id, @Valid @RequestBody EventUpdateDto eventUpdateDto) {
+        Event updatedEvent = eventService.update(id, eventUpdateDto);
 
-        updatedUser.add(
-                linkTo(methodOn(EventController.class).updateEvent(id, userDto)).withRel(SELF_REL),
-                linkTo(methodOn(EventController.class).getAllEvents()).withRel(GET_ALL_EVENTS_REL)
-//                linkTo(methodOn(EventController.class).createEvent(updatedUser)).withRel(CREATE_EVENT_REL)
+        updatedEvent.add(
+                linkTo(methodOn(EventController.class).updateEvent(id, eventUpdateDto)).withRel(SELF_REL),
+                linkTo(methodOn(EventController.class).getAllEvents()).withRel(GET_ALL_EVENTS_REL),
+                linkTo(methodOn(EventController.class).getEvent(updatedEvent.getId())).withRel(GET_EVENT_REL)
         );
 
-        return ResponseEntity.ok(updatedUser);
+        return ResponseEntity.ok(updatedEvent);
     }
 
     @DeleteMapping("/{id}")

@@ -2,6 +2,7 @@ package com.eventsphere.event.controller;
 
 import com.eventsphere.event.model.Category;
 import com.eventsphere.event.model.dto.CategoryDto;
+import com.eventsphere.event.model.dto.CategoryWithEventsDto;
 import com.eventsphere.event.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,25 @@ public class CategoryController {
 
         return ResponseEntity.ok(category);
     }
+
+    @GetMapping("/{id}/events")
+    public ResponseEntity<CategoryWithEventsDto> getCategoryEvents(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "false") boolean upcoming
+    ) {
+        Category category = categoryService.getWithEvents(id, page, size, upcoming);
+
+        category.add(
+                linkTo(methodOn(CategoryController.class).getCategory(id)).withRel(SELF_REL),
+                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel(GET_ALL_CATEGORIES_REL),
+                linkTo(methodOn(CategoryController.class).createCategory(category)).withRel(CREATE_CATEGORY_REL)
+        );
+
+        return ResponseEntity.ok(new CategoryWithEventsDto(category));
+    }
+
 
     @PostMapping
     public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {

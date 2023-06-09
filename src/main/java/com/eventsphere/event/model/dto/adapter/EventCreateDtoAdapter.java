@@ -1,10 +1,9 @@
 package com.eventsphere.event.model.dto.adapter;
 
-import com.eventsphere.event.exception.CategoryNotFoundException;
 import com.eventsphere.event.model.Category;
 import com.eventsphere.event.model.Event;
 import com.eventsphere.event.model.dto.EventCreateDto;
-import com.eventsphere.event.repository.CategoryRepository;
+import com.eventsphere.event.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EventCreateDtoAdapter {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     public Event fromDto(EventCreateDto dto) {
-        Category category = categoryRepository.findByName(dto.getCategory())
-                .orElseThrow(() -> new CategoryNotFoundException(dto.getCategory()));
+        Category category = categoryService.get(dto.getCategory());
 
         return Event.builder()
                 .creatorId(dto.getCreatorId())

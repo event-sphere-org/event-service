@@ -1,12 +1,12 @@
 package com.eventsphere.event.service;
 
-import com.eventsphere.event.exception.AlreadyExistsException;
 import com.eventsphere.event.exception.EventNotFoundException;
 import com.eventsphere.event.exception.EventNotValidException;
 import com.eventsphere.event.model.Event;
 import com.eventsphere.event.model.dto.EventCreateDto;
 import com.eventsphere.event.model.dto.EventUpdateDto;
 import com.eventsphere.event.model.dto.adapter.EventCreateDtoAdapter;
+import com.eventsphere.event.model.dto.adapter.EventUpdateDtoAdapter;
 import com.eventsphere.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,8 @@ public class EventService {
     private final EventRepository eventRepository;
 
     private final EventCreateDtoAdapter eventCreateDtoAdapter;
+
+    private final EventUpdateDtoAdapter eventUpdateDtoAdapter;
 
     public List<Event> getAll() {
         return eventRepository.findAll();
@@ -55,37 +57,9 @@ public class EventService {
     }
 
     public Event update(Long eventId, EventUpdateDto eventUpdateDto) {
-        Event eventFromDb = get(eventId);
+        Event updatedEvent = eventUpdateDtoAdapter.updateEventFromDto(get(eventId), eventUpdateDto);
 
-        if (eventUpdateDto.getTitle() != null &&
-                checkTitleUpdate(eventFromDb.getTitle(), eventUpdateDto.getTitle())) {
-            eventFromDb.setTitle(eventUpdateDto.getTitle());
-        }
-
-        if (eventUpdateDto.getDescription() != null) {
-            eventFromDb.setDescription(eventUpdateDto.getDescription());
-        }
-
-        if (eventUpdateDto.getImageUrl() != null) {
-            eventFromDb.setImageUrl(eventUpdateDto.getImageUrl());
-        }
-
-        if (eventUpdateDto.getLocation() != null) {
-            eventFromDb.setLocation(eventUpdateDto.getLocation());
-        }
-
-        if (eventUpdateDto.getTime() != null) {
-            eventFromDb.setTime(eventUpdateDto.getTime());
-        }
-
-        return save(eventFromDb);
-    }
-
-    public boolean checkTitleUpdate(String titleFromDb, String updatedTitle) {
-        if (!updatedTitle.equals(titleFromDb) && eventRepository.existsByTitle(updatedTitle)) {
-            throw new AlreadyExistsException("This title is already registered");
-        }
-        return true;
+        return save(updatedEvent);
     }
 
     public void delete(Long id) {
