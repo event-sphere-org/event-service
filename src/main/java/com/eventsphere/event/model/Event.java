@@ -80,29 +80,6 @@ public class Event extends RepresentationModel<Event> {
     @NotNull
     private Category category;
 
-    public Event(Long id, Long creatorId, String title, String description, String imageUrl, String location, Date date, @NotNull Time time, Category category) {
-        this.id = id;
-        this.creatorId = creatorId;
-        this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.location = location;
-        this.date = date;
-        this.time = time;
-        this.category = category;
-    }
-
-    public Event(Long creatorId, String title, String description, String imageUrl, String location, Date date, @NotNull Time time, @NotNull Category category) {
-        this.creatorId = creatorId;
-        this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.location = location;
-        this.date = date;
-        this.time = time;
-        this.category = category;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
