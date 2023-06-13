@@ -33,17 +33,17 @@ public class CategoryController {
 
         for (Category category : categories) {
             category.add(
-                    linkTo(methodOn(EventController.class).getEvent(category.getId())).withRel(GET_ALL_CATEGORIES_REL)
+                    linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withRel(GET_CATEGORY_REL)
             );
         }
 
-        CollectionModel<Category> eventCollectionModel = CollectionModel.of(categories);
-        eventCollectionModel.add(
+        CollectionModel<Category> categoryCollectionModel = CollectionModel.of(categories);
+        categoryCollectionModel.add(
                 linkTo(methodOn(CategoryController.class).getAllCategories()).withRel(SELF_REL),
                 linkTo(methodOn(CategoryController.class).createCategory(new Category())).withRel(CREATE_CATEGORY_REL)
         );
 
-        return ResponseEntity.ok(eventCollectionModel);
+        return ResponseEntity.ok(categoryCollectionModel);
     }
 
     @GetMapping("/{id}")
