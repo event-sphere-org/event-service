@@ -3,12 +3,16 @@ package com.eventsphere.event.model.dto;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Time;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventCreateDto {
 
     @NotNull
