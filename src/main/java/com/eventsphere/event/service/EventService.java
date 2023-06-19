@@ -8,14 +8,19 @@ import com.eventsphere.event.model.dto.EventUpdateDto;
 import com.eventsphere.event.model.dto.adapter.EventCreateDtoAdapter;
 import com.eventsphere.event.model.dto.adapter.EventUpdateDtoAdapter;
 import com.eventsphere.event.repository.EventRepository;
+import com.eventsphere.event.util.RabbitMqSender;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EventService {
 
     private final EventRepository eventRepository;
@@ -23,6 +28,8 @@ public class EventService {
     private final EventCreateDtoAdapter eventCreateDtoAdapter;
 
     private final EventUpdateDtoAdapter eventUpdateDtoAdapter;
+
+    private final RabbitMqSender sender;
 
     public List<Event> getAll() {
         return eventRepository.findAll();
@@ -64,10 +71,19 @@ public class EventService {
 
     public void delete(Long id) {
         if (eventRepository.existsById(id)) {
+            log.info("Sending deleted event id {} message to event-service", id);
+            sender.sendDeletedEventId(id);
             eventRepository.deleteById(id);
         } else {
             throw new EventNotFoundException(id);
         }
     }
 
+    @RabbitListener(queues = "${rabbitmq.queue.user.delete}")
+    @Transactional
+    public void deleteAllByCreatorId(Long id) {
+        log.info("Received delete user message from user-service with id: " + id);
+        eventRepository.deleteAllByCreatorId(id);
+        log.info("Deleted all events for user with id: " + id);
+    }
 }

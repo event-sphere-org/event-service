@@ -24,4 +24,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e FROM Event e WHERE e.category = :category AND e.date >= CURRENT_TIMESTAMP ORDER BY e.date ASC")
     Page<Event> findUpcomingEventsByCategory(@Param("category") Category category, Pageable pageable);
+
+    void deleteAllByCreatorId(Long creatorId);
 }

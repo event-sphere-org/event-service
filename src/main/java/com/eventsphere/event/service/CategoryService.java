@@ -8,7 +8,9 @@ import com.eventsphere.event.model.Event;
 import com.eventsphere.event.model.dto.CategoryDto;
 import com.eventsphere.event.repository.CategoryRepository;
 import com.eventsphere.event.repository.EventRepository;
+import com.eventsphere.event.util.RabbitMqSender;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +21,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
     private final EventRepository eventRepository;
+
+    private final RabbitMqSender sender;
 
     public List<Category> getAll() {
         return categoryRepository.findAll();
@@ -91,6 +96,8 @@ public class CategoryService {
 
     public void delete(Long id) {
         if (categoryRepository.existsById(id)) {
+            log.info("Sending deleted event id {} message to event-service", id);
+            sender.sendDeletedCategoryId(id);
             categoryRepository.deleteById(id);
         } else {
             throw new CategoryNotFoundException(id);

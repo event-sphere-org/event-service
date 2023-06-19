@@ -37,7 +37,7 @@ public class Category extends RepresentationModel<Category> {
     private String name;
 
     @Basic
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     @Null(message = "Cannot manually set creation date")
     private Timestamp createdAt;
