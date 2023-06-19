@@ -12,6 +12,8 @@ import com.eventsphere.event.util.RabbitMqSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,15 +33,23 @@ public class EventService {
 
     private final RabbitMqSender sender;
 
-    public List<Event> getAll() {
-        return eventRepository.findAll();
+    public List<Event> getAll(final int page, final int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return eventRepository.findAll(pageable).getContent();
     }
 
-    public Event get(Long id) {
+    public Event get(final Long id) {
         return eventRepository.findById(id).orElseThrow(() -> new EventNotFoundException(id));
     }
 
-    public Event save(Event event) {
+    public List<Event> getAllByCreatorId(final Long id, final int page, final int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return eventRepository.findByCreatorId(id, pageable).getContent();
+    }
+
+    public Event save(final Event event) {
         Event savedEvent;
 
         try {
@@ -55,7 +65,7 @@ public class EventService {
         return savedEvent;
     }
 
-    public Event create(EventCreateDto eventCreateDto) {
+    public Event create(final EventCreateDto eventCreateDto) {
         Event createdEvent = eventCreateDtoAdapter.fromDto(eventCreateDto);
 
         // TODO Check if user exists
@@ -63,15 +73,15 @@ public class EventService {
         return eventRepository.save(createdEvent);
     }
 
-    public Event update(Long eventId, EventUpdateDto eventUpdateDto) {
+    public Event update(final Long eventId, final EventUpdateDto eventUpdateDto) {
         Event updatedEvent = eventUpdateDtoAdapter.updateEventFromDto(get(eventId), eventUpdateDto);
 
         return save(updatedEvent);
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         if (eventRepository.existsById(id)) {
-            log.info("Sending deleted event id {} message to event-service", id);
+            log.info("Sending deleted event id {} message to user-service", id);
             sender.sendDeletedEventId(id);
             eventRepository.deleteById(id);
         } else {
@@ -81,7 +91,7 @@ public class EventService {
 
     @RabbitListener(queues = "${rabbitmq.queue.user.delete}")
     @Transactional
-    public void deleteAllByCreatorId(Long id) {
+    public void deleteAllByCreatorId(final Long id) {
         log.info("Received delete user message from user-service with id: " + id);
         eventRepository.deleteAllByCreatorId(id);
         log.info("Deleted all events for user with id: " + id);

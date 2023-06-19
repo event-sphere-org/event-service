@@ -46,7 +46,7 @@ class EventServiceTest {
         when(eventRepository.findAll()).thenReturn(expectedEvents);
 
         // When
-        List<Event> actualEvents = eventService.getAll();
+        List<Event> actualEvents = eventService.getAll(0, 10);
 
         // Then
         assertSame(expectedEvents, actualEvents);

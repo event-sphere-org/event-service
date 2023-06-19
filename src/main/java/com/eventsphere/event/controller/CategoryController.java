@@ -28,8 +28,11 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<CollectionModel<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAll();
+    public ResponseEntity<CollectionModel<Category>> getAllCategories(
+            @RequestParam(defaultValue = "0") final int page,
+            @RequestParam(defaultValue = "10") final int size
+    ) {
+        List<Category> categories = categoryService.getAll(page, size);
 
         for (Category category : categories) {
             category.add(
@@ -39,7 +42,7 @@ public class CategoryController {
 
         CollectionModel<Category> categoryCollectionModel = CollectionModel.of(categories);
         categoryCollectionModel.add(
-                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel(SELF_REL),
+                linkTo(methodOn(CategoryController.class).getAllCategories(0, 10)).withRel(SELF_REL),
                 linkTo(methodOn(CategoryController.class).createCategory(new Category())).withRel(CREATE_CATEGORY_REL)
         );
 
@@ -47,12 +50,12 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable Long id) {
+    public ResponseEntity<Category> getCategory(@PathVariable final Long id) {
         Category category = categoryService.get(id);
 
         category.add(
                 linkTo(methodOn(CategoryController.class).getCategory(id)).withRel(SELF_REL),
-                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel(GET_ALL_CATEGORIES_REL),
+                linkTo(methodOn(CategoryController.class).getAllCategories(0, 10)).withRel(GET_ALL_CATEGORIES_REL),
                 linkTo(methodOn(CategoryController.class).createCategory(category)).withRel(CREATE_CATEGORY_REL)
         );
 
@@ -61,16 +64,16 @@ public class CategoryController {
 
     @GetMapping("/{id}/events")
     public ResponseEntity<CategoryWithEventsDto> getCategoryEvents(
-            @PathVariable Long id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "false") boolean upcoming
+            @PathVariable final Long id,
+            @RequestParam(defaultValue = "0") final int page,
+            @RequestParam(defaultValue = "10") final int size,
+            @RequestParam(defaultValue = "false") final boolean upcoming
     ) {
         Category category = categoryService.getWithEvents(id, page, size, upcoming);
 
         category.add(
                 linkTo(methodOn(CategoryController.class).getCategory(id)).withRel(SELF_REL),
-                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel(GET_ALL_CATEGORIES_REL),
+                linkTo(methodOn(CategoryController.class).getAllCategories(0, 10)).withRel(GET_ALL_CATEGORIES_REL),
                 linkTo(methodOn(CategoryController.class).createCategory(category)).withRel(CREATE_CATEGORY_REL)
         );
 
@@ -79,12 +82,12 @@ public class CategoryController {
 
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody final Category category) {
         Category createdCategory = categoryService.create(category);
 
         createdCategory.add(
                 linkTo(methodOn(CategoryController.class).createCategory(category)).withRel(SELF_REL),
-                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel(GET_ALL_CATEGORIES_REL),
+                linkTo(methodOn(CategoryController.class).getAllCategories(0, 10)).withRel(GET_ALL_CATEGORIES_REL),
                 linkTo(methodOn(CategoryController.class).getCategory(createdCategory.getId())).withRel(GET_CATEGORY_REL)
         );
 
@@ -97,12 +100,15 @@ public class CategoryController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<Category> updateCategory(
+            @PathVariable final Long id,
+            @Valid @RequestBody final CategoryDto categoryDto
+    ) {
         Category updatedCategory = categoryService.update(id, categoryDto);
 
         updatedCategory.add(
                 linkTo(methodOn(CategoryController.class).updateCategory(id, categoryDto)).withRel(SELF_REL),
-                linkTo(methodOn(CategoryController.class).getAllCategories()).withRel(GET_ALL_CATEGORIES_REL),
+                linkTo(methodOn(CategoryController.class).getAllCategories(0, 10)).withRel(GET_ALL_CATEGORIES_REL),
                 linkTo(methodOn(CategoryController.class).createCategory(updatedCategory)).withRel(CREATE_CATEGORY_REL)
         );
 
@@ -110,7 +116,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable final Long id) {
         categoryService.delete(id);
         return ResponseEntity.ok().build();
     }

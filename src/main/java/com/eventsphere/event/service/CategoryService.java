@@ -30,15 +30,16 @@ public class CategoryService {
 
     private final RabbitMqSender sender;
 
-    public List<Category> getAll() {
-        return categoryRepository.findAll();
+    public List<Category> getAll(final int page, final int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return categoryRepository.findAll(pageable).getContent();
     }
 
-    public Category get(Long id) {
+    public Category get(final Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
 
-    public Category getWithEvents(Long id, int page, int size, boolean upcoming) {
+    public Category getWithEvents(final Long id, final int page, final int size, final boolean upcoming) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
         Pageable pageable = PageRequest.of(page, size);
 
@@ -51,12 +52,12 @@ public class CategoryService {
     }
 
 
-    public Category get(String name) {
+    public Category get(final String name) {
         return categoryRepository.findByName(name)
                 .orElseThrow(() -> new CategoryNotFoundException(name));
     }
 
-    public Category save(Category category) {
+    public Category save(final Category category) {
         try {
             category.setCreatedAt(null);
             category.setUpdatedAt(null);
@@ -68,7 +69,7 @@ public class CategoryService {
         }
     }
 
-    public Category create(Category category) {
+    public Category create(final Category category) {
         if (categoryRepository.existsByName(category.getName())) {
             throw new AlreadyExistsException("This category is already registered");
         } else {
@@ -76,7 +77,7 @@ public class CategoryService {
         }
     }
 
-    public Category update(Long categoryId, CategoryDto categoryDto) {
+    public Category update(final Long categoryId, final CategoryDto categoryDto) {
         Category categoryFromDb = get(categoryId);
 
         if (categoryDto.getName() != null &&
@@ -87,16 +88,18 @@ public class CategoryService {
         return save(categoryFromDb);
     }
 
-    public boolean checkNameUpdate(String nameFromDb, String updatedName) {
+    public boolean checkNameUpdate(final String nameFromDb, final String updatedName) {
         if (!updatedName.equals(nameFromDb) && categoryRepository.existsByName(updatedName)) {
             throw new AlreadyExistsException("This name is already registered");
         }
         return true;
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         if (categoryRepository.existsById(id)) {
-            log.info("Sending deleted event id {} message to event-service", id);
+            // TODO: Throw exception if category has events
+
+            log.info("Sending deleted event id {} message to user-service", id);
             sender.sendDeletedCategoryId(id);
             categoryRepository.deleteById(id);
         } else {

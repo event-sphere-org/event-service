@@ -26,4 +26,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findUpcomingEventsByCategory(@Param("category") Category category, Pageable pageable);
 
     void deleteAllByCreatorId(Long creatorId);
+
+    Page<Event> findByCreatorId(Long creatorId, Pageable pageable);
 }

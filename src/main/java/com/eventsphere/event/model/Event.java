@@ -64,7 +64,7 @@ public class Event extends RepresentationModel<Event> {
     private Time time;
 
     @Basic
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     @Null(message = "Cannot manually set creation date")
     private Timestamp createdAt;
@@ -72,7 +72,7 @@ public class Event extends RepresentationModel<Event> {
     @Basic
     @Column(name = "updated_at")
     @UpdateTimestamp
-    @Null(message = "Cannot manually set updated at date")
+    @Null(message = "Cannot manually set modification date")
     private Timestamp updatedAt;
 
     @ManyToOne
