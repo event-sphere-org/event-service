@@ -8,6 +8,7 @@ import com.eventsphere.event.model.dto.EventUpdateDto;
 import com.eventsphere.event.model.dto.adapter.EventCreateDtoAdapter;
 import com.eventsphere.event.model.dto.adapter.EventUpdateDtoAdapter;
 import com.eventsphere.event.repository.EventRepository;
+import com.eventsphere.event.service.client.UserClientService;
 import com.eventsphere.event.util.RabbitMqSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,8 @@ public class EventService {
     private final EventCreateDtoAdapter eventCreateDtoAdapter;
 
     private final EventUpdateDtoAdapter eventUpdateDtoAdapter;
+
+    private final UserClientService userClientService;
 
     private final RabbitMqSender sender;
 
@@ -68,7 +71,7 @@ public class EventService {
     public Event create(final EventCreateDto eventCreateDto) {
         Event createdEvent = eventCreateDtoAdapter.fromDto(eventCreateDto);
 
-        // TODO Check if user exists
+        userClientService.findUser(eventCreateDto.getCreatorId());
 
         return eventRepository.save(createdEvent);
     }

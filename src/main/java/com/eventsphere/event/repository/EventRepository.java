@@ -28,4 +28,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     void deleteAllByCreatorId(Long creatorId);
 
     Page<Event> findByCreatorId(Long creatorId, Pageable pageable);
+
+    boolean existsByCategory(Category category);
 }

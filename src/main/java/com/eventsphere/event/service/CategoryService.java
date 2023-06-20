@@ -1,6 +1,7 @@
 package com.eventsphere.event.service;
 
 import com.eventsphere.event.exception.AlreadyExistsException;
+import com.eventsphere.event.exception.CategoryHasEventsException;
 import com.eventsphere.event.exception.CategoryNotFoundException;
 import com.eventsphere.event.exception.CategoryNotValidException;
 import com.eventsphere.event.model.Category;
@@ -97,7 +98,13 @@ public class CategoryService {
 
     public void delete(final Long id) {
         if (categoryRepository.existsById(id)) {
-            // TODO: Throw exception if category has events
+            Category category = get(id);
+
+            if (eventRepository.existsByCategory(category)) {
+                throw new CategoryHasEventsException(
+                        String.format("Category %s with id %d has events", category.getName(), category.getId())
+                );
+            }
 
             log.info("Sending deleted event id {} message to user-service", id);
             sender.sendDeletedCategoryId(id);

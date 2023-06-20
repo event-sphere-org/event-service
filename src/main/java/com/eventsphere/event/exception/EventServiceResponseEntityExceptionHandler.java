@@ -42,7 +42,7 @@ public class EventServiceResponseEntityExceptionHandler extends ResponseEntityEx
      * @param request the current request.
      * @return a ResponseEntity containing the error details and status.
      */
-    @ExceptionHandler({EventNotFoundException.class, CategoryNotFoundException.class})
+    @ExceptionHandler({EventNotFoundException.class, CategoryNotFoundException.class, UserNotFoundException.class})
     public final ResponseEntity<ErrorDetails> handleNotFoundExceptions(Exception ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
                 ex.getMessage(), request.getDescription(false));
@@ -57,7 +57,7 @@ public class EventServiceResponseEntityExceptionHandler extends ResponseEntityEx
      * @param request the current request.
      * @return a ResponseEntity containing the error details and status.
      */
-    @ExceptionHandler(AlreadyExistsException.class)
+    @ExceptionHandler({AlreadyExistsException.class, CategoryHasEventsException.class})
     public final ResponseEntity<ErrorDetails> handleAlreadyExistsException(Exception ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(),
                 ex.getMessage(), request.getDescription(false));
